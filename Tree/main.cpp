@@ -7,7 +7,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    int m,n,i,k,h,g;
+    int m,n,k,h,g;
     ifstream f;
     f.open("C:\\Users\\Gimarr\\Documents\\Tree\\Matrix.txt");
     if (!f) {
@@ -18,69 +18,68 @@ int main(int argc, char *argv[])
     f >> n >> m;
 
     vector <vector <int> > Matrix (n, vector<int> (n,0));
-    vector <vector <int> > Versh(n, vector<int> (n,0));
-    for(i=0;i<m;i++) {
+    vector <vector <int> > Vertex(n, vector<int> (n,0));
+    for(int i = 0; i < m; i++) {
         f >> k >> h >> g;
         if (Matrix [k][h]==0) {
             Matrix [k][h]=g;
             Matrix [h][k]=g;
-            Versh [k][h]=i;
-            Versh [h][k]=i;
+            Vertex [h][k]=i;
+            Vertex [k][h]=i;
             } else
-                if (g<Matrix [k][h]){
+                if (g < Matrix [k][h]){
                 Matrix [k][h]=g;
                 Matrix [h][k]=g;
-                Versh [k][h]=i;
-                Versh [h][k]=i;
+                Vertex [k][h]=i;
+                Vertex [h][k]=i;
                 }
-        }
+    }
 
-    queue <int> Nomera;
-    vector <bool> Metka(n, false);
-    int br=0;
+    queue <int> Numbers;
+    vector <bool> Labels(n, false);
 
-    for( i=0;i<n;i++){
-        for( g=0;g<n;g++)
+    for(int i = 0; i < n; i++){
+        for(int g = 0;g < n; g++)
             cout <<" "<< Matrix [i][g];
         cout << endl;
     }
     cout << endl <<endl;
-    for( i=0;i<n;i++){
-        for( g=0;g<i;g++)
-            cout <<" "<< Versh [i][g];
+    for(int i = 0; i < n; i++){
+        for(int g = 0; g < n; g++)
+            cout <<" "<< Vertex [i][g];
         cout << endl;
     }
     int min;
     min=32767;
     bool b;
-while (1) {
-    for(i=0; i<n;i++)
-        for(g=0;g<i;g++){
-            cout <<"min = "<< min <<"/ Matrix["<<i<< "]["<<g<<"] = " << Matrix[i][g] << endl;
-            if((min >= Matrix[i][g]) && ( Metka[i]==false || Metka[g]==false  )&& Matrix[i][g]!=0){
-                min=Matrix[i][g];
-                k=i;
-                h=g;
-                b=true;
+    while (1) {
+        for(int i = 0; i < n;i++)
+            for(int g = 0; g < i; g++){
+                cout <<"min egde = "<< min <<"  Matrix["<<i<< "]["<<g<<"] = " << Matrix[i][g] << endl;
+                if(( min >= Matrix[i][g] ) && ( Labels[i]==false || Labels[g]==false  )&& Matrix[i][g]!=0){
+                    min=Matrix[i][g];
+                    k=i;
+                    h=g;
+                    b=true;
+                }
             }
-        }
 
-    cout << endl << "push " <<Versh[k][h] <<"  k="<<k <<" h="<<h <<endl;
-    Matrix[k][h]=32767;
-    Nomera.push(Versh[k][h]);
-    Metka[k]=true; Metka[h]=true;
-    br=Nomera.back();
-    min=32767;
-    if (!b) break;
-    b=false;
-}
-    cout << Nomera.size() <<endl;
-    cout << endl;
-    for(i=0;i<=Nomera.size();i++){
-        cout << Nomera.front() << " ";
-        Nomera.pop();
-   }
+        cout << endl << "push " <<Vertex[k][h] <<"  k = "<<k <<" h = "<< h <<endl;
+        Matrix[k][h]=32767;
+        Numbers.push(Vertex[k][h]);
+        Labels[k] = true;
+        Labels[h] = true;
 
+        min = 32767;
+        if (!b) break;
+        b = false;
+    }
+        cout << Numbers.size() <<endl;
+        cout << endl;
+        for(int i = 0; i <= Numbers.size(); i++){
+            cout << Numbers.front() << " ";
+            Numbers.pop();
+       }
 
     return a.exec();
 }
